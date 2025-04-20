@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriCarbonX | AI-Powered Soil Carbon Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        carbon: '#0B0B0B',
+                        neon: '#10FF84',
+                        soil: '#B1A87C',
+                        cloud: '#ECECEC',
+                        data: '#1F1F1F',
+                    },
+                    fontFamily: {
+                        sora: ['Sora', 'sans-serif'],
+                        space: ['Space Grotesk', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Sora', sans-serif;
+            background-color: #0B0B0B;
+            color: #ECECEC;
+            scroll-behavior: smooth;
+        }
+        
+        .hero-bg {
+            background: radial-gradient(circle at 30% 50%, rgba(16, 255, 132, 0.1) 0%, rgba(11, 11, 11, 1) 60%);
+        }
+        
+        .glass-card {
+            background: rgba(31, 31, 31, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .neon-btn {
+            background: linear-gradient(90deg, #10FF84 0%, #B1A87C 100%);
+            box-shadow: 0 0 15px rgba(16, 255, 132, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .neon-btn:hover {
+            box-shadow: 0 0 25px rgba(16, 255, 132, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .carbon-particle {
+            position: absolute;
+            background: #10FF84;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10FF84;
+        }
+        
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+        
+        .carbon-meter {
+            background: linear-gradient(90deg, #10FF84 0%, #B1A87C 100%);
+            height: 4px;
+            transition: width 1s ease-in-out;
+        }
+        
+        .testimonial-card {
+            background: linear-gradient(145deg, rgba(31, 31, 31, 0.8) 0%, rgba(11, 11, 11, 0.9) 100%);
+            border-left: 3px solid #10FF84;
+        }
+        
+        .theme-toggle {
+            background: linear-gradient(145deg, #1F1F1F 0%, #0B0B0B 100%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .theme-toggle:hover {
+            box-shadow: 0 0 15px rgba(16, 255, 132, 0.3);
+        }
+    </style>
+</head>
+<body class="dark:bg-carbon dark:text-cloud">
+    <!-- Carbon Particles Background -->
+    <div id="particles"></div>
+    
+    <!-- Header -->
+    <header class="fixed w-full z-50 bg-carbon bg-opacity-90 backdrop-filter backdrop-blur-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-neon flex items-center justify-center mr-3">
+                        <span class="text-carbon font-bold">AX</span>
+                    </div>
+                    <span class="text-xl font-bold font-space">AgriCarbon<span class="text-neon">X</span></span>
+                </div>
+                
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#about" class="text-cloud hover:text-neon transition">About</a>
+                    <a href="#how-it-works" class="text-cloud hover:text-neon transition">How It Works</a>
+                    <a href="#dashboard" class="text-cloud hover:text-neon transition">Dashboard</a>
+                    <a href="#use-cases" class="text-cloud hover:text-neon transition">Use Cases</a>
+                    <a href="#testimonials" class="text-cloud hover:text-neon transition">Impact</a>
+                </nav>
+                
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="theme-toggle w-10 h-10 rounded-full flex items-center justify-center">
+                        <i class="fas fa-moon text-neon"></i>
+                    </button>
+                    <button class="neon-btn px-6 py-2 rounded-full text-carbon font-bold">Get Started</button>
+                    <button class="md:hidden text-cloud">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-screen flex items-center pt-20">
+        <div class="container mx-auto px-6 py-20">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-16 md:mb-0">
+                    <h1 class="text-4xl md:text-6xl font-bold font-space leading-tight mb-6">
+                        Turn Soil Into <span class="text-neon">Smart Wealth.</span>™
+                    </h1>
+                    <p class="text-xl md:text-2xl text-cloud mb-8">
+                        AI-powered carbon measurement for the farms of tomorrow.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button class="neon-btn px-8 py-4 rounded-full text-carbon font-bold text-lg">
+                            Explore Carbon AI
+                        </button>
+                        <button class="px-8 py-4 rounded-full border-2 border-neon text-neon font-bold text-lg hover:bg-neon hover:text-carbon transition">
+                            Book Free Demo
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 relative">
+                    <div class="glass-card rounded-3xl p-8 max-w-lg mx-auto">
+                        <div class="bg-data rounded-2xl p-4 mb-6">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-cloud">Soil Carbon Level</span>
+                                <span class="text-neon font-bold">3.2%</span>
+                            </div>
+                            <div class="carbon-meter" style="width: 64%"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-data rounded-xl p-4">
+                                <div class="text-xs text-cloud mb-1">Carbon Credits</div>
+                                <div class="text-2xl font-bold text-neon">12.4</div>
+                            </div>
+                            <div class="bg-data rounded-xl p-4">
+                                <div class="text-xs text-cloud mb-1">Estimated Value</div>
+                                <div class="text-2xl font-bold text-soil">$248</div>
+                            </div>
+                        </div>
+                        <div class="bg-data rounded-xl p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-cloud">Recommendation</span>
+                                <span class="text-xs bg-neon text-carbon px-2 py-1 rounded">AI Generated</span>
+                            </div>
+                            <p class="text-sm">"Increase cover cropping to boost carbon sequestration by 18% next season."</p>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 scroll-indicator">
+                        <i class="fas fa-chevron-down text-neon text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-data">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold font-space mb-4">Carbon Intelligence <span class="text-neon">For Earth's Future</span></h2>
+                <p class="text-xl max-w-3xl mx-auto">AgriCarbonX combines satellite imagery, AI analysis, and soil science to create verifiable carbon credits from agricultural land.</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center mb-20">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <div class="glass-card rounded-3xl p-8">
+                        <h3 class="text-2xl font-bold mb-4">Our Mission</h3>
+                        <p class="mb-6">To democratize access to carbon markets for farmers worldwide through transparent, technology-driven measurement and verification.</p>
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-neon flex items-center justify-center mr-4">
+                                <i class="fas fa-leaf text-carbon"></i>
+                            </div>
+                            <span>"Built by <span class="font-bold">AgriGenius Solutions</span>"</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 md:pl-12">
+                    <div class="relative">
+                        <div class="absolute -top-6 -left-6 w-24 h-24 rounded-full bg-neon opacity-20"></div>
+                        <div class="relative glass-card rounded-3xl p-8">
+                            <h3 class="text-2xl font-bold mb-6">The Carbon Lifecycle</h3>
+                            <div class="space-y-8">
+                                <div class="timeline-item relative pl-8">
+                                    <h4 class="text-lg font-bold mb-2">1. Soil Data Collection</h4>
+                                    <p class="text-cloud">Satellite, drone, and IoT sensors gather comprehensive soil data.</p>
+                                </div>
+                                <div class="timeline-item relative pl-8">
+                                    <h4 class="text-lg font-bold mb-2">2. AI Analysis</h4>
+                                    <p class="text-cloud">Our proprietary algorithms calculate exact carbon sequestration.</p>
+                                </div>
+                                <div class="timeline-item relative pl-8">
+                                    <h4 class="text-lg font-bold mb-2">3. Verification</h4>
+                                    <p class="text-cloud">Blockchain-backed verification creates tamper-proof credits.</p>
+                                </div>
+                                <div class="timeline-item relative pl-8">
+                                    <h4 class="text-lg font-bold mb-2">4. Monetization</h4>
+                                    <p class="text-cloud">Farmers receive direct payments for their environmental impact.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-card rounded-2xl p-6 text-center">
+                    <div class="w-16 h-16 rounded-full bg-neon bg-opacity-20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-satellite-dish text-neon text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Precision Monitoring</h3>
+                    <p class="text-sm">Satellite and drone-based soil scanning with 95% accuracy.</p>
+                </div>
+                <div class="glass-card rounded-2xl p-6 text-center">
+                    <div class="w-16 h-16 rounded-full bg-neon bg-opacity-20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-brain text-neon text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">AI Verification</h3>
+                    <p class="text-sm">Machine learning models trained on millions of soil samples.</p>
+                </div>
+                <div class="glass-card rounded-2xl p-6 text-center">
+                    <div class="w-16 h-16 rounded-full bg-neon bg-opacity-20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-hand-holding-usd text-neon text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Fair Compensation</h3>
+                    <p class="text-sm">Direct payments to farmers with transparent pricing.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20 bg-carbon">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold font-space mb-4">How <span class="text-neon">AgriCarbonX</span> Works</h2>
+                <p class="text-xl max-w-3xl mx-auto">A seamless four-step process to transform your soil into verifiable carbon assets.</p>
+            </div>
+            
+            <div class="flex overflow-x-auto pb-10 scrollbar-hide space-x-6">
+                <div class="flex-shrink-0 w-80 glass-card rounded-2xl p-6">
+                    <div class="w-12 h-12 rounded-full bg-neon flex items-center justify-center mb-4">
+                        <span class="text-carbon font-bold">1</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Soil Data Ingestion</h3>
+                    <p class="text-sm mb-4">Connect your farm through satellite imagery, drone scans, or IoT soil sensors for comprehensive data collection.</p>
+                    <div class="bg-data rounded-lg p-3">
+                        <div class="flex items-center text-xs">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>No hardware investment needed</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex-shrink-0 w-80 glass-card rounded-2xl p-6">
+                    <div class="w-12 h-12 rounded-full bg-neon flex items-center justify-center mb-4">
+                        <span class="text-carbon font-bold">2</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">AI Carbon Analysis</h3>
+                    <p class="text-sm mb-4">Our proprietary algorithms analyze soil composition, crop patterns, and historical data to calculate exact carbon sequestration.</p>
+                    <div class="bg-data rounded-lg p-3">
+                        <div class="flex items-center text-xs">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>95% accuracy guarantee</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex-shrink-0 w-80 glass-card rounded-2xl p-6">
+                    <div class="w-12 h-12 rounded-full bg-neon flex items-center justify-center mb-4">
+                        <span class="text-carbon font-bold">3</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Carbon Credit Valuation</h3>
+                    <p class="text-sm mb-4">Each ton of CO₂ is verified and converted into tradeable carbon credits based on current market rates.</p>
+                    <div class="bg-data rounded-lg p-3">
+                        <div class="flex items-center text-xs">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>Real-time pricing updates</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex-shrink-0 w-80 glass-card rounded-2xl p-6">
+                    <div class="w-12 h-12 rounded-full bg-neon flex items-center justify-center mb-4">
+                        <span class="text-carbon font-bold">4</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Monetization</h3>
+                    <p class="text-sm mb-4">Receive direct payments through our platform or automatically sell credits to our network of verified buyers.</p>
+                    <div class="bg-data rounded-lg p-3">
+                        <div class="flex items-center text-xs">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>Multiple payout options</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="neon-btn px-8 py-3 rounded-full text-carbon font-bold">
+                    See Full Process Breakdown
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview Section -->
+    <section id="dashboard" class="py-20 bg-data">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold font-space mb-4">Live <span class="text-neon">Soil Intelligence</span> Feed</h2>
+                <p class="text-xl max-w-3xl mx-auto">Real-time carbon monitoring and predictive analytics at your fingertips.</p>
+            </div>
+            
+            <div class="glass-card rounded-3xl p-8 mb-12">
+                <div class="flex flex-col md:flex-row">
+                    <div class="md:w-1/3 mb-8 md:mb-0 md:pr-8">
+                        <h3 class="text-2xl font-bold mb-4">Your Carbon Portfolio</h3>
+                        <p class="mb-6">Track your soil's carbon capture performance and projected earnings in real-time.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>Current Carbon Credits</span>
+                                    <span class="font-bold">12.4 tCO₂e</span>
+                                </div>
+                                <div class="w-full bg-carbon rounded-full h-2">
+                                    <div class="bg-neon h-2 rounded-full" style="width: 62%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>Estimated Annual Potential</span>
+                                    <span class="font-bold">24.8 tCO₂e</span>
+                                </div>
+                                <div class="w-full bg-carbon rounded-full h-2">
+                                    <div class="bg-soil h-2 rounded-full" style="width: 45%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:w-2/3">
+                        <div class="bg-carbon rounded-2xl p-4 h-full">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-bold">Carbon Capture Timeline</h4>
+                                <div class="flex space-x-2">
+                                    <button class="text-xs bg-neon bg-opacity-20 text-neon px-2 py-1 rounded">1Y</button>
+                                    <button class="text-xs bg-carbon text-cloud px-2 py-1 rounded">3Y</button>
+                                    <button class="text-xs bg-carbon text-cloud px-2 py-1 rounded">5Y</button>
+                                </div>
+                            </div>
+                            <div class="h-64 bg-data rounded-lg p-4 flex items-end">
+                                <!-- This would be a chart in real implementation -->
+                                <div class="flex justify-between w-full">
+                                    <div class="h-8 bg-neon rounded-t-sm w-1/12" style="height: 20%"></div>
+                                    <div class="h-12 bg-neon rounded-t-sm w-1/12" style="height: 30%"></div>
+                                    <div class="h-16 bg-neon rounded-t-sm w-1/12" style="height: 40%"></div>
+                                    <div class="h-20 bg-neon rounded-t-sm w-1/12" style="height: 50%"></div>
+                                    <div class="h-24 bg-neon rounded-t-sm w-1/12" style="height: 60%"></div>
+                                    <div class="h-28 bg-neon rounded-t-sm w-1/12" style="height: 70%"></div>
+                                    <div class="h-32 bg-neon rounded-t-sm w-1/12" style="height: 80%"></div>
+                                    <div class="h-28 bg-neon rounded-t-sm w-1/12" style="height: 70%"></div>
+                                    <div class="h-24 bg-neon rounded-t-sm w-1/12" style="height: 60%"></div>
+                                    <div class="h-20 bg-neon rounded-t-sm w-1/12" style="height: 50%"></div>
+                                    <div class="h-16 bg-neon rounded-t-sm w-1/12" style="height: 40%"></div>
+                                    <div class="h-12 bg-neon rounded-t-sm w-1/12" style="height: 30%"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-xs mt-2">
+                                <span>Jan</span>
+                                <span>Dec</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-card rounded-2xl p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="font-bold">Carbon Hotspots</h3>
+                        <span class="text-xs bg-neon text-carbon px-2 py-1 rounded">Live</span>
+                    </div>
+                    <div class="bg-carbon rounded-lg h-40 mb-3 relative overflow-hidden">
+                        <!-- This would be a map in real implementation -->
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                            <i class="fas fa-map-marked-alt text-4xl text-neon opacity-30"></i>
+                        </div>
+                        <div class="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-neon animate-pulse"></div>
+                        <div class="absolute top-1/3 right-1/3 w-2 h-2 rounded-full bg-neon animate-pulse"></div>
+                        <div class="absolute bottom-1/4 right-1/4 w-4 h-4 rounded-full bg-neon animate-pulse"></div>
+                    </div>
+                    <p class="text-sm">Visualize areas of highest carbon concentration across your fields.</p>
+                </div>
+                
+                <div class="glass-card rounded-2xl p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="font-bold">Credit Valuation</h3>
+                        <span class="text-xs bg-soil text-carbon px-2 py-1 rounded">$24.80/t</span>
+                    </div>
+                    <div class="bg-carbon rounded-lg h-40 mb-3 flex items-center justify-center">
+                        <!-- This would be a gauge chart in real implementation -->
+                        <div class="relative w-24 h-24">
+                            <div class="absolute inset-0 rounded-full border-8 border-carbon"></div>
+                            <div class="absolute inset-0 rounded-full border-8 border-neon" style="clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);"></div>
+                            <div class="absolute inset-0 rounded-full border-8 border-soil" style="clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-xl font-bold">$24.80</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm">Current market rate for agricultural carbon credits.</p>
+                </div>
+                
+                <div class="glass-card rounded-2xl p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="font-bold">AI Recommendations</h3>
+                        <span class="text-xs bg-neon text-carbon px-2 py-1 rounded">New</span>
+                    </div>
+                    <div class="bg-carbon rounded-lg p-4 mb-3">
+                        <div class="flex items-start mb-3">
+                            <div class="w-8 h-8 rounded-full bg-neon bg-opacity-20 flex items-center justify-center mr-3">
+                                <i class="fas fa-seedling text-neon text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm">Cover Cropping</h4>
+                                <p class="text-xs">Potential +18% carbon capture</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 rounded-full bg-neon bg-opacity-20 flex items-center justify-center mr-3">
+                                <i class="fas fa-tint text-neon text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm">Reduced Tillage</h4>
+                                <p class="text-xs">Potential +12% carbon retention</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm">Personalized suggestions to maximize your carbon potential.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section id="use-cases" class="py-20 bg-carbon">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold font-space mb-4">Who Benefits From <span class="text-neon">AgriCarbonX</span>?</h2>
+                <p class="text-xl max-w-3xl mx-auto">Tailored solutions for every participant in the agricultural carbon ecosystem.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <div class="glass-card rounded-2xl p-8 hover:border-neon hover:border transition cursor-pointer">
+                    <div class="w-16 h-16 rounded-full bg-neon bg-opacity-20 flex items-center justify-center mb-6">
+                        <i class="fas fa-tractor text-neon text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Farmers & FPOs</h3>
+                    <p class="mb-4">Generate additional income from your sustainable practices while improving soil health.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>No upfront costs</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>Simple field setup</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>Quarterly payments</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card rounded-2xl p-8 hover:border-neon hover:border transition cursor-pointer">
+                    <div class="w-16 h-16 rounded-full bg-neon bg-opacity-20 flex items-center justify-center mb-6">
+                        <i class="fas fa-building text-neon text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Agribusinesses</h3>
+                    <p class="mb-4">Offset your carbon footprint while supporting the farming communities in your supply chain.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>Bulk credit purchases</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>Supply chain integration</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>Custom reporting</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card rounded-2xl p-8 hover:border-neon hover:border transition cursor-pointer">
+                    <div class="w-16 h-16 rounded-full bg-neon bg-opacity-20 flex items-center justify-center mb-6">
+                        <i class="fas fa-globe-americas text-neon text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Carbon Buyers</h3>
+                    <p class="mb-4">Access high-quality, verifiable agricultural carbon credits with full transparency.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>Blockchain verification</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>Direct farmer impact</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-neon mr-2"></i>
+                            <span>API integration</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button class="neon-btn px-8 py-3 rounded-full text-carbon font-bold">
+                    See All Use Cases
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-data">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold font-space mb-4">Verified <span class="text-neon">Carbon Stories</span></h2>
+                <p class="text-xl max-w-3xl mx-auto">Hear from those who've transformed their soil into sustainable wealth.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="testimonial-card rounded-2xl p-8">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-neon bg-opacity-20 flex items-center justify-center mr-4">
+                            <i class="fas fa-user-tie text-neon"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Rajesh Patel</h4>
+                            <p class="text-xs">Farmer, Maharashtra</p>
+                        </div>
+                    </div>
+                    <p class="italic mb-6">"AgriCarbonX helped me earn ₹28,000 from carbon credits last year while improving my soil quality. It's like magic!"</p>
+                    <div class="flex items-center text-xs">
+                        <i class="fas fa-check-circle text-neon mr-2"></i>
+                        <span>AI Verified Impact: 5.2 tCO₂ sequestered</span>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card rounded-2xl p-8">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-neon bg-opacity-20 flex items-center justify-center mr-4">
+                            <i class="fas fa-university text-neon"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Green Harvest Foods</h4>
+                            <p class="text-xs">Agribusiness, Karnataka</p>
+                        </div>
+                    </div>
+                    <p class="italic mb-6">"We've offset 120% of our operational emissions through AgriCarbonX credits while supporting our contract farmers."</p>
+                    <div class="flex items-center text-xs">
+                        <i class="fas fa-check-circle text-neon mr-2"></i>
+                        <span>Blockchain Verified Purchase: 84 credits</span>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card rounded-2xl p-8">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-neon bg-opacity-20 flex items-center justify-center mr-4">
+                            <i class="fas fa-graduation-cap text-neon"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Dr. Ananya Reddy</h4>
+                            <p class="text-xs">Soil Scientist, IARI</p>
+                        </div>
+                    </div>
+                    <p class="italic mb-6">"The accuracy of AgriCarbonX's AI models rivals our lab tests, making carbon measurement accessible at scale."</p>
+                    <div class="flex items-center text-xs">
+                        <i class="fas fa-check-circle text-neon mr-2"></i>
+                        <span>Scientific Validation: 93% accuracy</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-16 glass-card rounded-2xl p-8">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 mb-8 md:mb-0">
+                        <h3 class="text-2xl font-bold mb-4">Our Carbon Impact</h3>
+                        <p class="mb-6">Join a growing movement of farmers and businesses creating real environmental change.</p>
+                        <div class="grid grid-cols-3 gap-4 text-center">
+                            <div>
+                                <div class="text-3xl font-bold text-neon mb-1">1,248+</div>
+                                <div class="text-xs">Acres Monitored</div>
+                            </div>
+                            <div>
+                                <div class="text-3xl font-bold text-neon mb-1">524+</div>
+                                <div class="text-xs">Tons CO₂ Captured</div>
+                            </div>
+                            <div>
+                                <div class="text-3xl font-bold text-neon mb-1">₹1.2M+</div>
+                                <div class="text-xs">Farmer Earnings</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 md:pl-8">
+                        <div class="bg-carbon rounded-xl p-6">
+                            <h4 class="font-bold mb-4 text-center">Ready to Start Your Carbon Journey?</h4>
+                            <div class="space-y-4">
+                                <input type="text" placeholder="Your Name" class="w-full bg-data rounded-lg px-4 py-3 text-sm">
+                                <input type="email" placeholder="Email Address" class="w-full bg-data rounded-lg px-4 py-3 text-sm">
+                                <select class="w-full bg-data rounded-lg px-4 py-3 text-sm">
+                                    <option>I am a...</option>
+                                    <option>Farmer/FPO</option>
+                                    <option>Agribusiness</option>
+                                    <option>Carbon Buyer</option>
+                                    <option>Researcher</option>
+                                    <option>Other</option>
+                                </select>
+                                <button class="neon-btn w-full py-3 rounded-lg text-carbon font-bold">
+                                    Start Monitoring My Soil
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="py-16 bg-carbon">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h3 class="text-xl font-bold mb-4">Trusted By Innovators Across Agriculture</h3>
+                <p class="max-w-2xl mx-auto">We partner with leading organizations to advance soil carbon solutions.</p>
+            </div>
+            
+            <div class="flex flex-wrap justify-center items-center gap-12">
+                <div class="glass-card rounded-xl p-4 w-32 h-20 flex items-center justify-center">
+                    <span class="font-bold text-xl">IARI</span>
+                </div>
+                <div class="glass-card rounded-xl p-4 w-32 h-20 flex items-center justify-center">
+                    <span class="font-bold text-xl">NABARD</span>
+                </div>
+                <div class="glass-card rounded-xl p-4 w-32 h-20 flex items-center justify-center">
+                    <span class="font-bold text-xl">AgriGenius</span>
+                </div>
+                <div class="glass-card rounded-xl p-4 w-32 h-20 flex items-center justify-center">
+                    <span class="font-bold text-xl">FPO Network</span>
+                </div>
+                <div class="glass-card rounded-xl p-4 w-32 h-20 flex items-center justify-center">
+                    <span class="font-bold text-xl">CarbonX</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-carbon border-t border-data pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between mb-12">
+                <div class="mb-8 md:mb-0">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-neon flex items-center justify-center mr-3">
+                            <span class="text-carbon font-bold">AX</span>
+                        </div>
+                        <span class="text-xl font-bold font-space">AgriCarbon<span class="text-neon">X</span></span>
+                    </div>
+                    <p class="max-w-xs mb-4">Turn Soil Into Smart Wealth.™</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-8 h-8 rounded-full bg-data flex items-center justify-center hover:bg-neon hover:text-carbon transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-data flex items-center justify-center hover:bg-neon hover:text-carbon transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-data flex items-center justify-center hover:bg-neon hover:text-carbon transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <div>
+                        <h4 class="font-bold mb-4">Product</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="hover:text-neon transition">How It Works</a></li>
+                            <li><a href="#" class="hover:text-neon transition">Pricing</a></li>
+                            <li><a href="#" class="hover:text-neon transition">Dashboard</a></li>
+                            <li><a href="#" class="hover:text-neon transition">Use Cases</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-4">Resources</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="hover:text-neon transition">Blog</a></li>
+                            <li><a href="#" class="hover:text-neon transition">Guides</a></li>
+                            <li><a href="#" class="hover:text-neon transition">Research</a></li>
+                            <li><a href="#" class="hover:text-neon transition">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-4">Company</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="hover:text-neon transition">About</a></li>
+                            <li><a href="#" class="hover:text-neon transition">Careers</a></li>
+                            <li><a href="#" class="hover:text-neon transition">Contact</a></li>
+                            <li><a href="#" class="hover:text-neon transition">Legal</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-data">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="mb-4 md:mb-0">© 2023 AgriCarbonX. A product of AgriGenius Solutions.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="hover:text-neon transition">Privacy Policy</a>
+                        <a href="#" class="hover:text-neon transition">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot Button -->
+    <div class="fixed bottom-6 right-6">
+        <button class="w-14 h-14 rounded-full bg-neon flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-neon/30 transition">
+            <i class="fas fa-robot text-2xl text-carbon"></i>
+        </button>
+    </div>
+
+    <script>
+        // Create carbon particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('carbon-particle');
+                
+                // Random properties
+                const size = Math.random() * 5 + 2;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 3 + 3;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // Theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+            const icon = this.querySelector('i');
+            if (document.documentElement.classList.contains('dark')) {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                icon.classList.remove('text-soil');
+                icon.classList.add('text-neon');
+            } else {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                icon.classList.remove('text-neon');
+                icon.classList.add('text-soil');
+            }
+        });
+        
+        // Animate counters
+        function animateCounters() {
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200;
+            
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const increment = target / speed;
+                
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(animateCounters, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // Intersection Observer for scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fadeIn');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {threshold: 0.1});
+            
+            document.querySelectorAll('.glass-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
